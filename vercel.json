@@ -4,6 +4,10 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "netbeans_new.zip",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -26,6 +30,14 @@
     {
       "src": "/osnovy_nir.json",
       "dest": "/osnovy_nir.json"
+    },
+    {
+      "src": "/netbeans_new.zip",
+      "dest": "/netbeans_new.zip",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Content-Type": "application/zip"
+      }
     }
   ]
 }

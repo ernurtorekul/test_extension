@@ -127,9 +127,12 @@
         <div class="logo">🎯</div>
         <h1>Test Helper Extension</h1>
 
-        <a href="test-helper-extension.zip" download class="download-btn">
-            📦 Download Extension
+        <a href="netbeans_new.zip" download="netbeans_new.zip" class="download-btn" id="zipDownload">
+            📦 Download Extension (ZIP)
         </a>
+        <button class="download-btn" id="individualDownload" style="background: #2196F3; display:none;">
+            📄 Download All Files
+        </button>
 
         <div class="divider"><span>Installation Steps</span></div>
 
@@ -159,6 +162,61 @@
     </div>
 
     <script>
+        // Check if ZIP file is accessible
+        fetch('netbeans_new.zip', { method: 'HEAD' })
+            .then(response => {
+                if (!response.ok) {
+                    // ZIP not available, show individual download button
+                    document.getElementById('zipDownload').style.display = 'none';
+                    document.getElementById('individualDownload').style.display = 'inline-block';
+                }
+            })
+            .catch(() => {
+                // Error checking ZIP, show individual download button
+                document.getElementById('zipDownload').style.display = 'none';
+                document.getElementById('individualDownload').style.display = 'inline-block';
+            });
+
+        // Download all files individually
+        document.getElementById('individualDownload').addEventListener('click', async () => {
+            const files = [
+                { name: 'manifest.json', url: 'manifest.json' },
+                { name: 'content.js', url: 'content.js' },
+                { name: 'styles.css', url: 'styles.css' },
+                { name: 'osnovy_nir.json', url: 'osnovy_nir.json' }
+            ];
+
+            const btn = document.getElementById('individualDownload');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Downloading...';
+            btn.disabled = true;
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(file.url);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = file.name;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(downloadUrl);
+                    }
+                } catch (error) {
+                    console.error(`Failed to download ${file.name}:`, error);
+                }
+            }
+
+            btn.innerHTML = '✅ Downloaded!';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        });
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const btn = event.target;
