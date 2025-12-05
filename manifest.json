@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": " ",
+    "version": "3.0",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["osnovy_nir.json"],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}
