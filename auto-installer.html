@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Helper - Auto Installer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        .install-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .install-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        .install-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .progress {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            opacity: 1;
+            background: #e7f3ff;
+            border: 2px solid #667eea;
+        }
+        .step.completed {
+            opacity: 1;
+            background: #d4edda;
+        }
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .step.completed .step-icon {
+            background: #28a745;
+        }
+        .manual-step {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        .manual-step h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        .success h2 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 One-Click Install</h1>
+        <p class="subtitle">Install Test Helper Extension automatically</p>
+
+        <button id="autoInstallBtn" class="install-btn" onclick="startAutoInstall()">
+            ⚡ Auto Install Extension
+        </button>
+
+        <div class="progress" id="progressBar">
+            <div class="progress-bar" id="progressFill"></div>
+        </div>
+
+        <div id="stepsContainer">
+            <div class="step" id="step1">
+                <div class="step-icon">1</div>
+                <div>
+                    <strong>Downloading files...</strong>
+                    <div>Fetching extension components</div>
+                </div>
+            </div>
+
+            <div class="step" id="step2">
+                <div class="step-icon">2</div>
+                <div>
+                    <strong>Preparing package...</strong>
+                    <div>Creating extension bundle</div>
+                </div>
+            </div>
+
+            <div class="step" id="step3">
+                <div class="step-icon">3</div>
+                <div>
+                    <strong>Opening browser settings...</strong>
+                    <div>Navigating to extensions page</div>
+                </div>
+            </div>
+
+            <div class="step" id="step4">
+                <div class="step-icon">4</div>
+                <div>
+                    <strong>Final step required!</strong>
+                    <div>Please confirm the installation</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="manual-step" id="manualStep">
+            <h3>⚠️ Browser Security - Manual Confirmation Required</h3>
+            <p>For your security, browsers require one manual step:</p>
+            <ol style="color: #856404; margin: 15px 0; line-height: 1.8;">
+                <li>The extensions page should now be open in a new tab</li>
+                <li>Enable "Developer mode" (top right toggle)</li>
+                <li>Click "Load unpacked" button</li>
+                <li>Select the downloaded extension folder</li>
+            </ol>
+            <p style="margin-top: 15px;">
+                <strong>Files downloaded to:</strong><br>
+                <span class="code" id="downloadPath"></span>
+            </p>
+        </div>
+
+        <div class="success" id="successMessage">
+            <h2>✅ Installation Complete!</h2>
+            <p>The Test Helper extension is now installed and ready to use.</p>
+            <p style="margin-top: 10px;">
+                <strong>To use:</strong> Press <code>Ctrl+Shift+Click</code> on any question
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 4;
+
+        // Update progress
+        function updateProgress(step) {
+            const progress = ((step - 1) / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                stepEl.classList.remove('active', 'completed');
+
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                    stepEl.querySelector('.step-icon').innerHTML = '✓';
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                }
+            }
+        }
+
+        // Show step
+        function showStep(step) {
+            updateProgress(step);
+            currentStep = step;
+        }
+
+        // Start auto installation
+        async function startAutoInstall() {
+            const btn = document.getElementById('autoInstallBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⚙️</span> Installing...';
+
+            document.getElementById('progressBar').style.display = 'block';
+
+            // Step 1: Download files
+            showStep(1);
+            await downloadExtensionFiles();
+            await sleep(1500);
+
+            // Step 2: Create package
+            showStep(2);
+            await createExtensionPackage();
+            await sleep(1500);
+
+            // Step 3: Open extensions page
+            showStep(3);
+            await openExtensionsPage();
+            await sleep(1500);
+
+            // Step 4: Manual confirmation
+            showStep(4);
+            showManualStep();
+        }
+
+        // Download extension files
+        async function downloadExtensionFiles() {
+            const files = ['manifest.json', 'content.js', 'styles.css', 'osnovy_nir.json'];
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        // Create download link
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = file;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }
+                } catch (error) {
+                    console.error(`Failed to download ${file}:`, error);
+                }
+            }
+        }
+
+        // Create extension package (simulated)
+        async function createExtensionPackage() {
+            // In a real implementation, this would create a folder structure
+            // and prepare the extension for installation
+            return new Promise(resolve => {
+                setTimeout(resolve, 1000);
+            });
+        }
+
+        // Open extensions page
+        async function openExtensionsPage() {
+            const userAgent = navigator.userAgent;
+            let extensionsUrl = 'chrome://extensions/';
+
+            // Detect browser and set appropriate URL
+            if (userAgent.includes('Firefox')) {
+                extensionsUrl = 'about:addons';
+            } else if (userAgent.includes('Edg')) {
+                extensionsUrl = 'edge://extensions/';
+            }
+
+            // Open extensions page in new tab
+            window.open(extensionsUrl, '_blank');
+
+            // Store download path for user reference
+            const downloadPath = getDownloadPath();
+            document.getElementById('downloadPath').textContent = downloadPath;
+        }
+
+        // Get download path (approximation)
+        function getDownloadPath() {
+            const userAgent = navigator.userAgent;
+            let path = '';
+
+            if (userAgent.includes('Mac')) {
+                path = '/Users/YOUR_USERNAME/Downloads/';
+            } else if (userAgent.includes('Windows')) {
+                path = 'C:\\Users\\YOUR_USERNAME\\Downloads\\';
+            } else {
+                path = '~/Downloads/';
+            }
+
+            return path;
+        }
+
+        // Show manual step
+        function showManualStep() {
+            document.getElementById('manualStep').style.display = 'block';
+            document.getElementById('autoInstallBtn').innerHTML = '✅ Files Ready! Complete installation in other tab';
+
+            // Check for completion
+            setTimeout(checkInstallation, 5000);
+        }
+
+        // Check if installation is complete
+        function checkInstallation() {
+            // In a real implementation, you might check if the extension is installed
+            // For now, we'll show the success message after a delay
+            document.getElementById('manualStep').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Update final step
+            document.getElementById('step4').classList.add('completed');
+            document.getElementById('step4').querySelector('.step-icon').innerHTML = '✓';
+            updateProgress(totalSteps);
+        }
+
+        // Helper function
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Add spinning animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

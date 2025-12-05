@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Helper Extension - One-Click Install</title>
+    <title>Test Helper - Install</title>
     <style>
         * {
             margin: 0;
@@ -11,8 +11,8 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -21,329 +21,157 @@
         }
         .container {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 60px 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
             max-width: 500px;
             width: 100%;
         }
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
         h1 {
+            font-size: 32px;
             color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
+            margin-bottom: 40px;
         }
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-        .btn {
-            width: 100%;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .download-btn {
+            background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
+            padding: 20px 60px;
+            font-size: 20px;
             font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 15px;
+            display: inline-block;
+            text-decoration: none;
+            margin-bottom: 40px;
         }
-        .btn:hover {
+        .download-btn:hover {
+            background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
         }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .divider {
+            color: #999;
+            margin: 40px 0;
+            position: relative;
         }
-        .status {
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-            font-weight: 500;
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
         }
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            position: relative;
         }
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-            display: block;
-        }
-        .features {
+        .step {
+            margin: 20px 0;
+            text-align: left;
             background: #f8f9fa;
             padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+            border-radius: 8px;
         }
-        .features h3 {
+        .step-title {
+            font-weight: 600;
             color: #333;
-            margin-bottom: 10px;
-            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .features ul {
-            list-style: none;
-            padding: 0;
+        .copy-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: monospace;
         }
-        .features li {
-            padding: 5px 0;
+        .copy-btn:hover {
+            background: #1976D2;
+        }
+        .copy-btn.copied {
+            background: #4CAF50;
+        }
+        .step-text {
             color: #666;
-            position: relative;
-            padding-left: 20px;
+            line-height: 1.6;
         }
-        .features li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-        }
-        .hidden {
-            display: none;
-        }
-        .loading {
+        .code {
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #333;
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎯 Test Helper Extension</h1>
-        <p class="subtitle">Pass your tests effortlessly with AI-powered answers</p>
+        <div class="logo">🎯</div>
+        <h1>Test Helper Extension</h1>
 
-        <button id="installBtn" class="btn" onclick="installExtension()">
-            🚀 Install Extension (1 Click)
-        </button>
+        <a href="test-helper-extension.zip" download class="download-btn">
+            📦 Download Extension
+        </a>
 
-        <button id="chromeInstallBtn" class="btn hidden" onclick="installForChrome()">
-            📦 Install for Chrome/Edge
-        </button>
+        <div class="divider"><span>Installation Steps</span></div>
 
-        <button id="firefoxInstallBtn" class="btn hidden" onclick="installForFirefox()">
-            🦊 Install for Firefox
-        </button>
+        <div class="step">
+            <div class="step-title">
+                1. Open Extensions
+                <button class="copy-btn" onclick="copyToClipboard('chrome://extensions')">Copy</button>
+            </div>
+            <div class="step-text">
+                Paste <span class="code">chrome://extensions</span> in your browser's address bar
+            </div>
+        </div>
 
-        <div id="status" class="status"></div>
+        <div class="step">
+            <div class="step-title">2. Enable Developer Mode</div>
+            <div class="step-text">
+                Toggle the "Developer mode" switch in the top right corner
+            </div>
+        </div>
 
-        <div class="features">
-            <h3>✨ Features:</h3>
-            <ul>
-                <li>Ctrl+Shift+Click to select questions</li>
-                <li>Hold Ctrl to see answers</li>
-                <li>Works on any test platform</li>
-                <li>No registration required</li>
-                <li>Completely free</li>
-            </ul>
+        <div class="step">
+            <div class="step-title">3. Load Extension</div>
+            <div class="step-text">
+                Click "Load unpacked" and select the folder where you saved the downloaded files
+            </div>
         </div>
     </div>
 
     <script>
-        let isChrome = false;
-        let isFirefox = false;
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
 
-        // Detect browser
-        function detectBrowser() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isOpera = !!window.opr || !!window.opera || userAgent.includes(' opr/');
-            const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime) && !isOpera;
-            const isFirefox = userAgent.includes('firefox') || typeof InstallTrigger !== 'undefined';
-            const isEdge = userAgent.includes('edg');
-
-            return { isChrome: isChrome || isEdge, isFirefox, isOpera };
-        }
-
-        // Show status message
-        function showStatus(message, type = 'info') {
-            const statusEl = document.getElementById('status');
-            statusEl.className = `status ${type}`;
-            statusEl.textContent = message;
-        }
-
-        // Show loading state
-        function setLoading(button, loading = true) {
-            if (loading) {
-                button.innerHTML = '<span class="loading"></span>Installing...';
-                button.disabled = true;
-            } else {
-                button.innerHTML = button.getAttribute('data-original-text') || 'Install Extension';
-                button.disabled = false;
-            }
-        }
-
-        // Create extension package
-        async function createExtensionPackage() {
-            const files = {
-                'manifest.json': {
-                    "manifest_version": 3,
-                    "name": "Test Helper Pro",
-                    "version": "3.0",
-                    "description": "AI-powered test assistant for students",
-                    "permissions": ["activeTab", "scripting"],
-                    "content_scripts": [{
-                        "matches": ["<all_urls>"],
-                        "js": ["content.js"],
-                        "css": ["styles.css"]
-                    }],
-                    "web_accessible_resources": [{
-                        "resources": ["osnovy_nir.json"],
-                        "matches": ["<all_urls>"]
-                    }]
-                }
-            };
-
-            // Read actual files from server
-            try {
-                const contentResponse = await fetch('content.js');
-                const styleResponse = await fetch('styles.css');
-                const dataResponse = await fetch('osnovy_nir.json');
-
-                if (contentResponse.ok) files['content.js'] = await contentResponse.text();
-                if (styleResponse.ok) files['styles.css'] = await styleResponse.text();
-                if (dataResponse.ok) files['osnovy_nir.json'] = await dataResponse.text();
-            } catch (error) {
-                showStatus('Warning: Could not load all files. Please ensure all extension files are in the same folder.', 'error');
-            }
-
-            return files;
-        }
-
-        // Main installation function
-        async function installExtension() {
-            const browser = detectBrowser();
-            const installBtn = document.getElementById('installBtn');
-
-            // Store original button text
-            installBtn.setAttribute('data-original-text', installBtn.innerHTML);
-            setLoading(installBtn, true);
-
-            showStatus('Detecting your browser...', 'info');
-
-            setTimeout(() => {
-                setLoading(installBtn, false);
-
-                if (browser.isChrome) {
-                    isChrome = true;
-                    document.getElementById('chromeInstallBtn').classList.remove('hidden');
-                    showStatus('Chrome/Edge detected. Click below to install.', 'info');
-                } else if (browser.isFirefox) {
-                    isFirefox = true;
-                    document.getElementById('firefoxInstallBtn').classList.remove('hidden');
-                    showStatus('Firefox detected. Click below to install.', 'info');
-                } else {
-                    showStatus('Unsupported browser. Please use Chrome, Edge, or Firefox.', 'error');
-                }
-            }, 1500);
-        }
-
-        // Install for Chrome/Edge
-        async function installForChrome() {
-            const btn = document.getElementById('chromeInstallBtn');
-            btn.setAttribute('data-original-text', btn.innerHTML);
-            setLoading(btn, true);
-
-            showStatus('Preparing installation...', 'info');
-
-            try {
-                // Check if Chrome extension installation is possible
-                if (window.chrome && window.chrome.webstore) {
-                    // For Chrome Web Store deployment
-                    showStatus('Redirecting to Chrome Web Store...', 'info');
-                    // window.location.href = 'https://chrome.google.com/webstore/detail/YOUR_EXTENSION_ID';
-                } else {
-                    // For manual installation guide
-                    showStatus('Opening installation instructions...', 'info');
-                    await guideManualInstallation();
-                }
-            } catch (error) {
-                showStatus('Installation failed. Please try manual installation.', 'error');
-            }
-
-            setLoading(btn, false);
-        }
-
-        // Install for Firefox
-        async function installForFirefox() {
-            const btn = document.getElementById('firefoxInstallBtn');
-            btn.setAttribute('data-original-text', btn.innerHTML);
-            setLoading(btn, true);
-
-            showStatus('Preparing Firefox installation...', 'info');
-
-            try {
-                // Create a temporary file for Firefox
-                const files = await createExtensionPackage();
-
-                // For Firefox Add-ons
-                showStatus('Opening Firefox Add-ons store...', 'info');
-                // window.location.href = 'https://addons.mozilla.org/firefox/addon/YOUR_EXTENSION_ID';
-
-                // Fallback to manual installation
                 setTimeout(() => {
-                    guideManualInstallation();
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
                 }, 2000);
-
-            } catch (error) {
-                showStatus('Firefox installation failed. Please try manual installation.', 'error');
-            }
-
-            setLoading(btn, false);
+            });
         }
-
-        // Guide manual installation
-        async function guideManualInstallation() {
-            showStatus(`
-Manual Installation Guide:
-1. Download all extension files (manifest.json, content.js, styles.css, osnovy_nir.json)
-2. Open Chrome/Edge: Go to chrome://extensions/
-3. Enable "Developer mode" (top right)
-4. Click "Load unpacked"
-5. Select the folder containing the extension files
-6. Extension is now installed! Use Ctrl+Shift+Click on any question.
-            `, 'info');
-        }
-
-        // Check if extension is already installed
-        function checkExtensionInstalled() {
-            // Simple check - in production, you'd check for your extension ID
-            if (window.chrome && window.chrome.runtime) {
-                // Extension context available
-                return true;
-            }
-            return false;
-        }
-
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            if (checkExtensionInstalled()) {
-                showStatus('✅ Extension is already installed and active!', 'success');
-                document.getElementById('installBtn').style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
